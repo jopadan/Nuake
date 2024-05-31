@@ -27,10 +27,6 @@ workspace "Nuake"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
-include "Nuake/dependencies/glfw_p5.lua"
-include "Nuake/dependencies/glad_p5.lua"
-include "Nuake/dependencies/assimp_p5.lua"
-include "Nuake/dependencies/freetype_p5.lua"
 include "Nuake/dependencies/jolt_p5.lua"
 include "Nuake/dependencies/soloud_p5.lua"
 include "Nuake/dependencies/optick_p5.lua"
@@ -79,9 +75,6 @@ project "Nuake"
     {
         "%{prj.name}",
         "%{prj.name}/src/Vendors",
-        "%{prj.name}/dependencies/glad/include",
-        "%{prj.name}/dependencies/glfw/include",
-        "%{prj.name}/dependencies/assimp/include",
         "%{prj.name}/dependencies/JoltPhysics",
         "%{prj.name}/src/Vendors/msdfgen/include",
         "%{prj.name}/src/Vendors/msdfgen/freetype/include",
@@ -111,8 +104,8 @@ project "Nuake"
             "glib-2.0"
         }
         
-        buildoptions { "`pkg-config --cflags glib-2.0 pango gdk-pixbuf-2.0 atk`" }
-    	linkoptions { "`pkg-config --libs glib-2.0 pango gdk-pixbuf-2.0`" }
+        buildoptions { "`pkg-config --cflags glib-2.0 pango gdk-pixbuf-2.0 atk glew assimp`" }
+    	linkoptions { "`pkg-config --libs glib-2.0 pango gdk-pixbuf-2.0 glew assimp`" }
         
         includedirs
         {
@@ -160,9 +153,6 @@ project "NuakeRuntime"
     {
         "%{prj.name}/../Nuake",
         "%{prj.name}/../Nuake/src/Vendors",
-        "%{prj.name}/../Nuake/Dependencies/glad/include",
-        "%{prj.name}/../Nuake/Dependencies/GLFW/include",
-        "%{prj.name}/../Nuake/Dependencies/assimp/include",
         "%{prj.name}/../Nuake/Dependencies/build",
         "%{prj.name}/../Nuake/src/Vendors/msdfgen",
 		"%{prj.name}/../Nuake/Dependencies/JoltPhysics",
@@ -172,10 +162,8 @@ project "NuakeRuntime"
 
     libdirs
     {
-        "%{prj.name}/../Nuake/dependencies/assimp/lib/",
         "%{prj.name}/../Nuake/dependencies/freetype-windows-binaries/release static/win64",
         "%{prj.name}/../bin/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/Nuake/",
-        "%{prj.name}/../Nuake/dependencies/freetype/include",
         "%{prj.name}/../Nuake/src/Vendors/msdfgen/freetype/win64",
         "%{prj.name}/../Nuake/src/Vendors/msdfgen",
         "%{prj.name}/../Nuake/src/Vendors/wren/src/include",
@@ -290,9 +278,6 @@ project "Editor"
     {
         "%{prj.name}/../Nuake",
         "%{prj.name}/../Nuake/src/Vendors",
-        "%{prj.name}/../Nuake/dependencies/glad/include",
-        "%{prj.name}/../Nuake/dependencies/glfw/include",
-        "%{prj.name}/../Nuake/dependencies/assimp/include",
         "%{prj.name}/../Nuake/dependencies/build",
         "%{prj.name}/../Nuake/src/Vendors/msdfgen",
 		"%{prj.name}/../Nuake/dependencies/JoltPhysics",
@@ -303,11 +288,7 @@ project "Editor"
     
     libdirs 
     { 
-        "%{prj.name}/../Nuake/dependencies/GLEW/lib/Release/x64",
-        "%{prj.name}/../Nuake/dependencies/assimp/lib/",
-        "%{prj.name}/../Nuake/dependencies/freetype-windows-binaries/release static/win64",
         "%{prj.name}/../bin/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/Nuake/",
-        "%{prj.name}/../Nuake/dependencies/freetype/include",
         "%{prj.name}/../Nuake/src/Vendors/msdfgen/freetype/win64",
         "%{prj.name}/../Nuake/src/Vendors/msdfgen",
         "%{prj.name}/../Nuake/src/Vendors/wren/src/include",
@@ -366,8 +347,8 @@ project "Editor"
             "asound"
         }
 
- 	    buildoptions { "`pkg-config --cflags glib-2.0 pango gdk-pixbuf-2.0 gtk-3 atk tk-3.0 glib-2.0`" }
-    	linkoptions { "`pkg-config --libs glib-2.0 pango gdk-pixbuf-2.0 gtk-3 glib-2.0 lgobject-2.0`" }
+ 	buildoptions { "`pkg-config --cflags glib-2.0 pango gdk-pixbuf-2.0 gtk-3 atk tk-3.0 glib-2.0 glew assimp`" }
+    	linkoptions { "`pkg-config --libs glib-2.0 pango gdk-pixbuf-2.0 gtk-3 glib-2.0 lgobject-2.0 glew assimp`" }
 
         
         includedirs
