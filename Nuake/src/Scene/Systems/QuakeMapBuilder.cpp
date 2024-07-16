@@ -382,6 +382,8 @@ namespace Nuake {
         ent.GetComponent<NameComponent>().IsPrefab = true;
 
         QuakeMapComponent& quakeMapC = ent.GetComponent<QuakeMapComponent>();
+        quakeMapC.m_Brushes.clear();
+
         ScaleFactor = quakeMapC.ScaleFactor;
         Scene* m_Scene = ent.GetScene();
 
@@ -513,6 +515,8 @@ namespace Nuake {
                 auto& transformComponent = brushEntity.GetComponent<TransformComponent>();
                 auto& bsp = brushEntity.AddComponent<BSPBrushComponent>();
                 
+                quakeMapC.m_Brushes.push_back(brushEntity);
+
                 bsp.IsSolid = true;
                 bsp.IsTransparent = false;
                 bsp.IsFunc = false;
