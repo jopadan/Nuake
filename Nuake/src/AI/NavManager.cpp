@@ -12,6 +12,8 @@
 #include "src/Scene/Entities/Entity.h"
 #include "src/Core/Maths.h"
 
+#include "src/AI/RecastConfig.h"
+
 namespace Nuake {
 
 	void NavManager::Initialize()
@@ -29,13 +31,13 @@ namespace Nuake {
 		m_Meshes.push_back({ mesh, transform });
 	}
 
-	void NavManager::BuildNavMesh()
+	void NavManager::BuildNavMesh(const RecastConfig& config)
 	{
 		// Merge all meshes togheter
 		std::vector<Vector3> vertices;
 		std::vector<int> indices;
 
-		// Since we are merging all the meshes togheter, we need to offset
+		// Since we are merging all the meshes together, we need to offset
 		// the indices so they point to the correct vertices in the array.
 		// Example: Model1 + Model2 + Model3 will get merged together in one array
 		// and we need to make sure the indices of Model2 point to the correct location in the merged array
@@ -56,23 +58,23 @@ namespace Nuake {
 			currentVertexOffset = std::size(vertices);
 		}
 
-		float bmin[3] = { -100.0f, -100.0f, -100.0f };
-		float bmax[3] = { 100.0f, 100.0f, 100.0f };
+		float bmin[3] = { -config.Bound.x, -config.Bound.y, -config.Bound.z };
+		float bmax[3] = { config.Bound.x, config.Bound.y, config.Bound.z };
 		rcConfig recastConfig;
-		recastConfig.cs = 0.2f;
-		recastConfig.ch = 0.2f;
-		recastConfig.tileSize = 10.0f;
-		recastConfig.walkableSlopeAngle = 45.0f;
-		recastConfig.maxEdgeLen = 12.0f;
-		recastConfig.maxVertsPerPoly = 6.0f;
-		recastConfig.walkableHeight = 1.0f;
-		recastConfig.walkableClimb = 1.0f;
-		recastConfig.walkableRadius = 1.0f;
-		recastConfig.maxSimplificationError = 1.3f;
-		recastConfig.minRegionArea = 4.0f;
-		recastConfig.mergeRegionArea = 10.0f;
-		recastConfig.detailSampleDist = 2.0f;
-		recastConfig.detailSampleMaxError = 1.0f;
+		recastConfig.cs = config.CellSize;
+		recastConfig.ch = config.CellHeight;
+		recastConfig.tileSize = config.TileSize;
+		recastConfig.walkableSlopeAngle = config.WalkableSlopeAngle;
+		recastConfig.maxEdgeLen = config.MaxEdgeLength;
+		recastConfig.maxVertsPerPoly = config.MaxVertsPerPoly;
+		recastConfig.walkableHeight = config.WalkableHeight;
+		recastConfig.walkableClimb = config.WalkableClimb;
+		recastConfig.walkableRadius = config.WalkableRadius;
+		recastConfig.maxSimplificationError = config.MaxSimplificationError;
+		recastConfig.minRegionArea = config.MinRegionArea;
+		recastConfig.mergeRegionArea = config.MergeRegionArea;
+		recastConfig.detailSampleDist = config.DetailSampleDistance;
+		recastConfig.detailSampleMaxError = config.DetailsampleMaxError;
 		
 		rcVcopy(recastConfig.bmin, bmin);
 		rcVcopy(recastConfig.bmax, bmax);
@@ -274,6 +276,8 @@ namespace Nuake {
 		{
 			Logger::Log("Could not init Detour navmesh query", "NavManager", CRITICAL);
 		}
+
+		m_Meshes.clear();
 	}
 
 	void NavManager::DrawNavMesh()
@@ -283,8 +287,8 @@ namespace Nuake {
 			return;
 		}
 
-		duDebugDrawNavMeshBVTree(&m_DebugDrawer, *m_DetourNavMesh);
-		duDebugDrawNavMeshNodes(&m_DebugDrawer, *m_DetourNavQuery);
+		//duDebugDrawNavMeshBVTree(&m_DebugDrawer, *m_DetourNavMesh);
+		//duDebugDrawNavMeshNodes(&m_DebugDrawer, *m_DetourNavQuery);
 		duDebugDrawNavMesh(&m_DebugDrawer, *m_DetourNavMesh, DU_DRAWNAVMESH_OFFMESHCONS);
 
 		if (Engine::GetCurrentScene()->EntityExists("test"))
