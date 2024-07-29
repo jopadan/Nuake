@@ -22,6 +22,8 @@ namespace Nuake
     public:
         LightType Type = Point;
         Vector3 Direction;
+        float Cutoff = 12.5f;
+        float OuterCutoff = 20.0f;
         Vector3 Color;
 
         bool IsVolumetric = false;
@@ -50,8 +52,8 @@ namespace Nuake
             glm::mat4 inverseViewProjection = glm::inverse(viewProjection);
 
             // TODO: Automate this
-            const float nearClip = 0.0001f;
-            const float farClip = 800.0f;
+            const float nearClip = 0.01f;
+            const float farClip = 500.0f;
             const float clipRange = farClip - nearClip;
 
             const float mCascadeNearPlaneOffset = -100.0f;
@@ -71,7 +73,7 @@ namespace Nuake
                 mCascadeSplits[i] = (d - nearClip) / clipRange;
             }
 
-            mCascadeSplits[0] = 0.01f;
+            //mCascadeSplits[0] = 0.01f;
             //mCascadeSplits[1] = 0.45f;
             //mCascadeSplits[2] = 1.0f;
 
@@ -126,7 +128,7 @@ namespace Nuake
                 glm::vec3 minExtents = -maxExtents;
 
                 // Calculate the view and projection matrix
-                glm::vec3 lightDir = -this->Direction;
+                glm::vec3 lightDir = this->Direction;
                 glm::mat4 lightViewMatrix = glm::lookAt(frustumCenter - lightDir * -minExtents.z, frustumCenter, glm::vec3(0.0f, 0.0f, 1.0f));
                 glm::mat4 lightProjectionMatrix = glm::ortho(minExtents.x, maxExtents.x, minExtents.y, maxExtents.y, 0.0f + mCascadeNearPlaneOffset, maxExtents.z - minExtents.z + mCascadeFarPlaneOffset);
 
